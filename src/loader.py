@@ -2,25 +2,9 @@ import glob
 import chardet
 import pandas as pd
 import os
-import logging
 from utils import Utility
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-Utility().create_folder('Logs')
-params = Utility().read_params()
-
-main_log_folderpath = params['logging_folder_paths']['main_log_foldername']
-data_loading_filename = params['logging_folder_paths']['data_loading_filename']
-
-file_handler = logging.FileHandler(os.path.join(main_log_folderpath, data_loading_filename))
-
-formatter = logging.Formatter(
-    '%(asctime)s : %(levelname)s : %(filename)s : %(message)s')
-
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+logger = Utility().setup_logger()
 
 def combine_csvs_with_season():
     """ Combine all csv datasets into a single file with season tagging using two loops """
@@ -47,6 +31,8 @@ def combine_csvs_with_season():
     target_dir = os.path.join(root_dir, 'Data', 'processed')
     os.makedirs(target_dir, exist_ok=True)
     df_master.to_csv(os.path.join(target_dir, 'AllTrips.csv'), index=False)
+
+    logger.info("All the raw csv files were converted into one csv file.")
 
     return df_master
 
