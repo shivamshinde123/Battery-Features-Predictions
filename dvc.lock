@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  load:
+    cmd: python src/loader.py
+    deps:
+    - path: Data/raw
+      hash: md5
+      md5: 924e2bd8cd265eee8635f615d43516d2.dir
+      size: 149316359
+      nfiles: 38
+    - path: src/loader.py
+      hash: md5
+      md5: 2c4fbe4929aff231ffa4634b9ba6e52b
+      size: 1804
+    outs:
+    - path: Data/processed/AllTrips.csv
+      hash: md5
+      md5: d54f64ecfb74cc897839a7072d81fc2d
+      size: 165968794
+  validate:
+    cmd: python src/validation.py
+    deps:
+    - path: Data/processed/AllTrips.csv
+      hash: md5
+      md5: d54f64ecfb74cc897839a7072d81fc2d
+      size: 165968794
+    - path: src/validation.py
+      hash: md5
+      md5: 10704f6d19b743c9b6a0182b114e49b0
+      size: 2538
+  preprocess:
+    cmd: python src/preprocessing.py
+    deps:
+    - path: Data/processed/AllTrips.csv
+      hash: md5
+      md5: d54f64ecfb74cc897839a7072d81fc2d
+      size: 165968794
+    - path: src/preprocessing.py
+      hash: md5
+      md5: 1d10c01d23fc1be94fe23cf976b21ae4
+      size: 3738
+    outs:
+    - path: Data/processed/processed_trip_data.csv
+      hash: md5
+      md5: 10fe3fff4819a14401b3160d94b850cd
+      size: 527862284
