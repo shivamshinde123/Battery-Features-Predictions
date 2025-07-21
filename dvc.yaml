@@ -1,0 +1,20 @@
+stages:
+  load:
+    cmd: python src/loader.py
+    deps:
+      - src/loader.py
+      - Data/raw
+    outs:
+      - Data/processed/AllTrips.csv
+  validate:
+    cmd: python src/validation.py
+    deps:
+      - src/validation.py
+      - Data/processed/AllTrips.csv
+  preprocess:
+    cmd: python src/preprocessing.py
+    deps:
+      - src/preprocessing.py
+      - Data/processed/AllTrips.csv
+    outs:
+      - Data/processed/processed_trip_data.csv
