@@ -37,10 +37,10 @@ stages:
       size: 165968794
     - path: src/preprocessing.py
       hash: md5
-      md5: 1d10c01d23fc1be94fe23cf976b21ae4
-      size: 3738
+      md5: 40ab481dbb23cdbf0374075bbe48693d
+      size: 4993
     outs:
     - path: Data/processed/processed_trip_data.csv
       hash: md5
-      md5: 10fe3fff4819a14401b3160d94b850cd
-      size: 527862284
+      md5: 3513230f8ed633b40649736c70c7f67c
+      size: 72380875
