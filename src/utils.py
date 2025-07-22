@@ -32,7 +32,7 @@ class Utility:
         logger = logging.getLogger(name)
 
         try:
-            log_dir = os.path.join("..", "Logs")
+            log_dir = os.path.join(self.root_dir, "Logs")
             Utility().create_folder(log_dir)
 
             filename = os.path.join(log_dir, f"{name}.log")
