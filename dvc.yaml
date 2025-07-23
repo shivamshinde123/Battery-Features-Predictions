@@ -18,3 +18,11 @@ stages:
       - Data/processed/AllTrips.csv
     outs:
       - Data/processed/processed_trip_data.csv
+  model_training:
+    cmd: python src/model_training.py
+    deps:
+      - src/model_training.py
+      - Data/processed/processed_trip_data.csv
+      - params.yaml
+    outs:
+      - Models/xgb_model.pkl
