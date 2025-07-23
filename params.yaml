@@ -1,1 +1,17 @@
 
+
+General:
+  random_state: 123
+
+Models:
+  xgb:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.5
+    subsample: 1
+    colsample_bytree: 1
+
+  nn:
+    num_layers: 3
+    num_neurons: 10
+
