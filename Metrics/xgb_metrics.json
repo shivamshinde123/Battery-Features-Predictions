@@ -1,6 +1,6 @@
 {
-    "rmse_test": 0.03804879806822795,
-    "rmse_val": 0.03774670881357015,
-    "r2_adjusted_score_test": 0.9533531078362467,
-    "r2_adjusted_score_val": 0.9542421492548058
+    "rmse_test": 0.03826679787125418,
+    "rmse_val": 0.03819271122374813,
+    "r2_adjusted_score_test": 0.9528490913112768,
+    "r2_adjusted_score_val": 0.9529475984195264
 }

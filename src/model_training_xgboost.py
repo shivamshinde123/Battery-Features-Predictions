@@ -12,12 +12,10 @@ from sklearn.metrics import r2_score, root_mean_squared_error
 
 logger = Utility().setup_logger()
 
-class Models:
+class R2_Adjusted:
 
     def __init__(self):
-        self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.root_dir = os.path.abspath(os.path.join(self.script_dir, '..'))
-        self.df = pd.read_csv(os.path.join(self.root_dir, 'Data', 'processed', 'processed_trip_data.csv'))
+        pass
 
     def adjusted_r2_score(self, y_true, y_pred, n_features):
         """
@@ -35,6 +33,15 @@ class Models:
         n = len(y_true)  # number of observations
         adj_r2 = 1 - (1 - r2) * (n - 1) / (n - n_features - 1)
         return adj_r2
+
+
+
+class XGBModel:
+
+    def __init__(self):
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.root_dir = os.path.abspath(os.path.join(self.script_dir, '..'))
+        self.df = pd.read_csv(os.path.join(self.root_dir, 'Data', 'processed', 'processed_trip_data.csv'))
 
     def train_xgboost(self):
 
@@ -65,8 +72,8 @@ class Models:
 
                 X, y = self.df.drop('SoC', axis=1), self.df['SoC']
 
-                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-                X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.5, random_state=23)
+                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=random_state)
+                X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.5, random_state=random_state)
 
                 model = xgb.XGBRegressor(
                     n_estimators=n_estimators,
@@ -84,11 +91,13 @@ class Models:
                 y_pred_test = model.predict(X_test)
                 y_pred_val = model.predict(X_val)
 
+                r2_obj = R2_Adjusted()
+
                 rmse_test = root_mean_squared_error(y_test, y_pred_test)
-                r2_adjusted_score_test = self.adjusted_r2_score(y_test, y_pred_test, n_features=len(X_train.columns))
+                r2_adjusted_score_test = r2_obj.adjusted_r2_score(y_test, y_pred_test, n_features=len(X_train.columns))
 
                 rmse_val = root_mean_squared_error(y_val, y_pred_val)
-                r2_adjusted_score_val = self.adjusted_r2_score(y_val, y_pred_val, n_features=len(X_train.columns))
+                r2_adjusted_score_val = r2_obj.adjusted_r2_score(y_val, y_pred_val, n_features=len(X_train.columns))
 
                 logger.info("trained xgboost model tested on the test data.")
 
@@ -121,13 +130,9 @@ class Models:
             logger.error("xgboost model training failed", exc_info=e)
             raise
 
-    def train_nn(self):
-        pass
-
-
 if __name__ == "__main__":
 
-    models = Models()
-    models.train_xgboost()
+    xgb_model = XGBModel()
+    xgb_model.train_xgboost()
 
 

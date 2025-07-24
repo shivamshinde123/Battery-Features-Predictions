@@ -18,11 +18,21 @@ stages:
       - Data/processed/AllTrips.csv
     outs:
       - Data/processed/processed_trip_data.csv
-  model_training:
-    cmd: python src/model_training.py
+  model_training_xgb:
+    cmd: python src/model_training_xgboost.py
     deps:
-      - src/model_training.py
+      - src/model_training_xgboost.py
       - Data/processed/processed_trip_data.csv
       - params.yaml
     outs:
       - Models/xgb_model.pkl
+      - Metrics/xgb_metrics.json
+  model_training_nn:
+    cmd: python src/model_training_nn.py
+    deps:
+      - src/model_training_nn.py
+      - Data/processed/processed_trip_data.csv
+      - params.yaml
+    outs:
+      - Models/nn_model.pth
+      - Metrics/nn_metrics.json

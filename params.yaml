@@ -11,7 +11,4 @@ Models:
     subsample: 1
     colsample_bytree: 1
 
-  nn:
-    num_layers: 3
-    num_neurons: 10
 
