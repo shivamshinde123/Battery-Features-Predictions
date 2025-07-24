@@ -4,6 +4,7 @@ import mlflow
 import xgboost as xgb
 from utils import Utility
 import os
+import json
 import pickle
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -96,6 +97,20 @@ class Models:
 
                 mlflow.log_metric('xgb_rmse_val', rmse_val)
                 mlflow.log_metric('xgb_r2_adjusted_score_val', r2_adjusted_score_val)
+
+                os.makedirs(os.path.join(self.root_dir, 'Metrics'), exist_ok=True)
+
+                xgb_metrics = {
+                    'rmse_test' : rmse_test,
+                    'rmse_val': rmse_val,
+                    'r2_adjusted_score_test': r2_adjusted_score_test,
+                    'r2_adjusted_score_val': r2_adjusted_score_val
+                }
+
+                with open(os.path.join(self.root_dir, 'Metrics', 'xgb_metrics.json'), 'w') as json_file:
+                    json.dump(xgb_metrics, json_file, indent=4)
+
+                os.makedirs(os.path.join(self.root_dir, 'Models'), exist_ok=True)
 
                 with open(os.path.join(self.root_dir, "Models", "xgb_model.pkl"), "wb") as f:
                     pickle.dump(model, f)
