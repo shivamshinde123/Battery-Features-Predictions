@@ -53,14 +53,14 @@ stages:
       size: 72380875
     - path: params.yaml
       hash: md5
-      md5: a8a7603d10036b226d1c560a495af107
-      size: 213
+      md5: 25a009bc99d1681f9eb9dada94cff695
+      size: 214
     - path: src/model_training.py
       hash: md5
-      md5: ad656f51a56b85dbbb294fe8852248bc
-      size: 4150
+      md5: 4eb8a419500d60cf7573ef090871cb02
+      size: 4789
     outs:
     - path: Models/xgb_model.pkl
       hash: md5
-      md5: 373613a48c6aaf969168326678e0a138
-      size: 487353
+      md5: f594f08315b6df246efa1528a722f4d6
+      size: 8594218
