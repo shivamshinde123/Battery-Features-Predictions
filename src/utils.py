@@ -28,6 +28,8 @@ class Utility:
 
         """This method is used to initialize the logger"""
 
+        os.makedirs(os.path.join(self.root_dir, 'Logs'), exist_ok=True)
+
         name = self.get_caller_filename()  # file name with .py
         logger = logging.getLogger(name)
 
