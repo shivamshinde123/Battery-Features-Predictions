@@ -3,6 +3,9 @@ import streamlit as st
 import numpy as np
 import os
 import pickle
+from ..utils import Utility
+
+logger = Utility().setup_logger()
 
 class Webapp:
 
@@ -12,27 +15,34 @@ class Webapp:
 
     def app(self):
 
-        st.title('State of Charge (SoC) Prediction')
+        """streamlit app"""
 
-        battery_voltage_v = st.number_input('Battery Voltage (V)')
-        heating_power_can_kW = st.number_input('Heating Power CAN (kW)')
-        heater_voltage_v = st.number_input('Heater Voltage (v)')
-        coolant_volume_flow_500_l_h = st.number_input('Coolant Volume Flow (l/h)')
-        battery_current_a = st.number_input('Battery Current (A)')
+        try:
+            st.title('State of Charge (SoC) Prediction')
 
-        input = np.array([battery_voltage_v, heating_power_can_kW, heater_voltage_v, coolant_volume_flow_500_l_h, battery_current_a])
+            battery_voltage_v = st.number_input('Battery Voltage (V)')
+            heating_power_can_kW = st.number_input('Heating Power CAN (kW)')
+            heater_voltage_v = st.number_input('Heater Voltage (v)')
+            coolant_volume_flow_500_l_h = st.number_input('Coolant Volume Flow (l/h)')
+            battery_current_a = st.number_input('Battery Current (A)')
 
-        predict_soc_btn = st.button('Predict SoC')
+            input = np.array([battery_voltage_v, heating_power_can_kW, heater_voltage_v, coolant_volume_flow_500_l_h, battery_current_a])
 
-        with open(os.path.join(self.root_dir, 'Models', 'xgb_model.pkl'), 'rb') as file:
-            model = pickle.load(file)
+            predict_soc_btn = st.button('Predict SoC')
 
-        if predict_soc_btn:
-            with st.spinner("Predicting SoC..."):
+            with open(os.path.join(self.root_dir, 'Models', 'xgb_model.pkl'), 'rb') as file:
+                model = pickle.load(file)
 
-                soc = model.predict(input.reshape(1, -1))
+            if predict_soc_btn:
+                with st.spinner("Predicting SoC..."):
 
-                st.success(f"State of Charge (SoC): {soc[0]}.")
+                    soc = model.predict(input.reshape(1, -1))
+
+                    st.success(f"State of Charge (SoC): {soc[0]}.")
+
+        except Exception as e:
+            logger.error("Webapp loading failed.", exc_info=e)
+            raise
 
 if __name__ == "__main__":
 
