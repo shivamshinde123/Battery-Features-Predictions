@@ -2,7 +2,7 @@ import re
 import os
 
 import pandas as pd
-from utils import Utility
+from src.utils import Utility
 from sklearn.preprocessing import MinMaxScaler
 
 # setting up the logger
@@ -13,23 +13,22 @@ class Preprocess:
     """This class is used for preprocessing the data before machine learning model training."""
 
     def __init__(self):
-        self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.root_dir = os.path.abspath(os.path.join(self.script_dir, '..'))
-        self.df = pd.read_csv(os.path.join(self.root_dir, 'Data', 'processed', 'AllTrips.csv'))
+        pass
 
-
-    def drop_features(self, feature_list):
+    def drop_features(self, df, feature_list):
         """This method drops the features that are not useful for ml prediction model"""
         try:
-            self.df = self.df.drop(feature_list, axis=1)
+            df = df.drop(feature_list, axis=1)
+            return df
         except Exception as e:
             logger.error('Dropping useless features failed', exc_info=e)
             raise
 
-    def keep_features(self, keep_features_list):
+    def keep_features(self, df, keep_features_list):
         """This method is used to keep the required features and remove the rest"""
         try:
-            self.df = self.df[keep_features_list]
+            df = df[keep_features_list]
+            return df
         except Exception as e:
             logger.error("Keeping required features only failed", exc_info=e)
 
@@ -53,43 +52,44 @@ class Preprocess:
             logger.error("Renaming features failed", exc_info=e)
             raise
 
-    def replace_missing_values(self):
+    def replace_missing_values(self, df):
 
         """This method is used to replace the missing values in feature with median of the feature"""
 
         try:
-            for feature in self.df.columns:
-                self.df[feature] = self.df[feature].fillna(self.df[feature].median())
+            for feature in df.columns:
+                df[feature] = df[feature].fillna(df[feature].median())
+            return df
         except Exception as e:
             logger.error("Replacing missing values failed", exc_info=e)
             raise
 
-    def scale_features(self):
+    def scale_features(self, df):
 
         """This method is used to scale the features to the similar scale"""
 
         try:
             scaler = MinMaxScaler()
-            self.df = pd.DataFrame(scaler.fit_transform(self.df), columns=self.df.columns)
-
+            df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+            return df
         except Exception as e:
             logger.error("Scaling features failed", exc_info=e)
             raise
 
-    def remove_features_with_zero_variance(self):
+    def remove_features_with_zero_variance(self, df):
 
         """This method is used to remove the features with zero variance"""
 
         try:
             feature_list = list()
-            numeric_cols = self.df.select_dtypes(include='number').columns
+            numeric_cols = df.select_dtypes(include='number').columns
             for feature in numeric_cols:
-                val = self.df[feature].var()
+                val = df[feature].var()
                 if val == 0:
                     feature_list.append(feature)
 
-            self.df = self.df.drop(feature_list, axis=1)
-
+            df = df.drop(feature_list, axis=1)
+            return df
         except Exception as e:
             logger.error("Removing features with zero variance failed", exc_info=e)
             raise
@@ -99,40 +99,45 @@ if __name__ == "__main__":
     # creating object of Preprocess class
     pr = Preprocess()
 
+    # Dataframe
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(os.path.join(script_dir, '..'))
+    df = pd.read_csv(os.path.join(root_dir, 'Data', 'processed', 'AllTrips.csv'))
+
     # Dropping useless features
     drop_features= [
     "Time [s]", "max. Battery Temperature [°C]", "displayed SoC [%]", "min. SoC [%]", "max. SoC [%)",
     "Ambient Temperature Sensor [°C]", "Requested Coolant Temperature [°C]", "Temperature Vent right [°C]",
     "Velocity [km/h]]]", "Requested Heating Power [W]"]
 
-    pr.drop_features(drop_features)
+    df = pr.drop_features(df, drop_features)
     logger.info("Useless features dropped.")
 
     # Rewriting the column names properly
-    pr.df.columns = [pr.clean_column(col) for col in pr.df.columns]
+    df.columns = [pr.clean_column(col) for col in df.columns]
     logger.info('Column names rewritten properly.')
 
     # Replacing missing values with median
-    pr.replace_missing_values()
+    df = pr.replace_missing_values(df)
     logger.info("Missing values replaced with median of respective feature.")
 
     # Dropping duplicate records
-    pr.df.drop_duplicates(inplace=True, keep='first')
+    df.drop_duplicates(inplace=True, keep='first')
     logger.info("Removed duplicate records")
 
     # scaling the features
-    pr.scale_features()
+    df = pr.scale_features(df)
     logger.info("Scaled the features to similar values.")
 
-    # Remove the features with zero variance
-    pr.remove_features_with_zero_variance()
+    # Remove the features with zero variances
+    df = pr.remove_features_with_zero_variance(df)
     logger.info("Feature with zero variance removed")
 
     # Keeping only the prominent features and removing rest
     keep_feature_list = ['Battery_Voltage_V', 'Heating_Power_CAN_kW', 'Heater_Voltage_V', 'Coolant_Volume_Flow_500_l_h', 'Battery_Current_A', 'SoC']
 
-    pr.keep_features(keep_feature_list)
+    df = pr.keep_features(df, keep_feature_list)
     logger.info("Most prominent features that give good accuracy without inducing much noise kept and rest dropped.")
 
-    pr.df.to_csv(os.path.join(pr.root_dir, 'Data', 'processed', 'processed_trip_data.csv'), index=False)
+    df.to_csv(os.path.join(root_dir, 'Data', 'processed', 'processed_trip_data.csv'), index=False)
     logger.info("Preprocessed data saved as csv file.")

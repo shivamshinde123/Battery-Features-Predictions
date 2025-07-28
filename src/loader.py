@@ -2,7 +2,7 @@ import glob
 import chardet
 import pandas as pd
 import os
-from utils import Utility
+from src.utils import Utility
 
 logger = Utility().setup_logger()
 

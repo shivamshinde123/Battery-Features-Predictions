@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import json
 from sklearn.model_selection import train_test_split
-from utils import Utility
+from src.utils import Utility
 from sklearn.metrics import mean_squared_error
 from model_training_xgboost import R2_Adjusted
 
@@ -23,7 +23,6 @@ class BatteryDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
-
 
 class BatteryNeuralNetwork(nn.Module):
 
@@ -88,6 +87,23 @@ if __name__ == "__main__":
         print(f"Epoch {epoch+1}, Loss: {loss.item(): .4f}")
 
     model.eval()
+
+    r2_obj = R2_Adjusted()
+
+    predictions_train = []
+    targets_train = []
+
+    with torch.no_grad():
+        for batch_X, batch_y in train_loader:
+            outputs = model(batch_X).squeeze()
+            predictions_train.extend(outputs.tolist())
+            targets_train.extend(batch_y.tolist())
+
+    mse_train = mean_squared_error(targets_train, predictions_train)
+    r2_adj_train = r2_obj.adjusted_r2_score(targets_train, predictions_train, df.shape[1]-1)
+
+    logger.info(f"Train MSE: {mse_train: .4f}, Train r2 adjusted score: {r2_adj_train: .4f}")
+
     predictions_test = []
     targets_test = []
 
@@ -97,10 +113,9 @@ if __name__ == "__main__":
             predictions_test.extend(outputs.tolist())
             targets_test.extend(batch_y.tolist())
 
-    r2_obj = R2_Adjusted()
-
     mse_test = mean_squared_error(targets_test, predictions_test)
     r2_adj_test = r2_obj.adjusted_r2_score(targets_test, predictions_test, df.shape[1]-1)
+
     logger.info(f"Test MSE: {mse_test: .4f}, Test r2 adjusted score: {r2_adj_test: .4f}")
 
     predictions_val = []
@@ -114,12 +129,15 @@ if __name__ == "__main__":
 
     mse_val = mean_squared_error(targets_val, predictions_val)
     r2_adj_val = r2_obj.adjusted_r2_score(targets_val, predictions_val, df.shape[1]-1)
+
     logger.info(f"Validation MSE: {mse_val: .4f}, Validation r2 adjusted score: {r2_adj_val: .4f}")
 
     os.makedirs(os.path.join(root_dir, 'Models'),exist_ok=True)
     os.makedirs(os.path.join(root_dir, 'Metrics'), exist_ok=True)
 
     metrics = {
+        'mse_train':mse_train,
+        'r2_adj_train':r2_adj_train,
         'mse_test': mse_test,
         'r2_adj_test': r2_adj_test,
         'mse_val': mse_val,

@@ -2,7 +2,7 @@ from sys import exc_info
 
 import mlflow
 import xgboost as xgb
-from utils import Utility
+from src.utils import Utility
 import os
 import json
 import pickle
@@ -33,8 +33,6 @@ class R2_Adjusted:
         n = len(y_true)  # number of observations
         adj_r2 = 1 - (1 - r2) * (n - 1) / (n - n_features - 1)
         return adj_r2
-
-
 
 class XGBModel:
 
@@ -88,10 +86,14 @@ class XGBModel:
 
                 logger.info("xgboost model training completed.")
 
+                y_pred_train = model.predict(X_train)
                 y_pred_test = model.predict(X_test)
                 y_pred_val = model.predict(X_val)
 
                 r2_obj = R2_Adjusted()
+
+                rmse_train = root_mean_squared_error(y_train, y_pred_train)
+                r2_adjusted_score_train = r2_obj.adjusted_r2_score(y_train, y_pred_train, n_features=len(X_train.columns))
 
                 rmse_test = root_mean_squared_error(y_test, y_pred_test)
                 r2_adjusted_score_test = r2_obj.adjusted_r2_score(y_test, y_pred_test, n_features=len(X_train.columns))
@@ -100,6 +102,9 @@ class XGBModel:
                 r2_adjusted_score_val = r2_obj.adjusted_r2_score(y_val, y_pred_val, n_features=len(X_train.columns))
 
                 logger.info("trained xgboost model tested on the test data.")
+
+                mlflow.log_metric('xgb_rmse_train', rmse_train)
+                mlflow.log_metric('xgb_r2_adjusted_score_train', r2_adjusted_score_train)
 
                 mlflow.log_metric('xgb_rmse_test', rmse_test)
                 mlflow.log_metric('xgb_r2_adjusted_score_test', r2_adjusted_score_test)
@@ -110,8 +115,10 @@ class XGBModel:
                 os.makedirs(os.path.join(self.root_dir, 'Metrics'), exist_ok=True)
 
                 xgb_metrics = {
+                    'rmse_train': rmse_train,
                     'rmse_test' : rmse_test,
                     'rmse_val': rmse_val,
+                    'r2_adjusted_score_train': r2_adjusted_score_train,
                     'r2_adjusted_score_test': r2_adjusted_score_test,
                     'r2_adjusted_score_val': r2_adjusted_score_val
                 }

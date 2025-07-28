@@ -1,7 +1,7 @@
 import pandas as pd
 from pydantic import ValidationError, confloat, conint, create_model
 import os
-from utils import Utility
+from src.utils import Utility
 
 logger = Utility().setup_logger()
 
