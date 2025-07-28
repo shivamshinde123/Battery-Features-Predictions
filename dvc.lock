@@ -37,8 +37,8 @@ stages:
       size: 165968794
     - path: src/preprocessing.py
       hash: md5
-      md5: f6583e88e081eb831b484fb613acbde1
-      size: 4991
+      md5: 30249e426a7e6c269472ac7f7d42f599
+      size: 5066
     outs:
     - path: Data/processed/processed_trip_data.csv
       hash: md5
@@ -77,16 +77,16 @@ stages:
       size: 167
     - path: src/model_training_xgboost.py
       hash: md5
-      md5: 9c85184da23f7f941ee692ea95610532
-      size: 4889
+      md5: 54f3bc8e1fd46dd3aab7f4adc02922bb
+      size: 5421
     outs:
     - path: Metrics/xgb_metrics.json
       hash: md5
-      md5: 194a2ae00da1eb4ddb4c87dab8c64ff9
-      size: 181
+      md5: 35ee29ed584b7f7a942a30c4fbb8339c
+      size: 273
     - path: Models/xgb_model.pkl
       hash: md5
-      md5: dfebcd556532bfa4ae23bd28486db9e0
+      md5: 41dc81c44c66950066efd45aa8300b29
       size: 8600611
   model_training_nn:
     cmd: python src/model_training_nn.py
@@ -101,14 +101,14 @@ stages:
       size: 167
     - path: src/model_training_nn.py
       hash: md5
-      md5: 79811b972c347267c88cdfb154f9dd66
-      size: 4347
+      md5: 53e23aff4485b2d6551e38ad9d6ef721
+      size: 4970
     outs:
     - path: Metrics/nn_metrics.json
       hash: md5
-      md5: 099868cd68e92fdfb658f2ee4b201052
-      size: 159
+      md5: da6fe6dcd404fd4462026d34721110ba
+      size: 239
     - path: Models/nn_model.pth
       hash: md5
-      md5: c561630cb87c8581cb0fdf834147d7b5
+      md5: cb8db8bc16ba15f38a226c2f9229a155
       size: 141409
