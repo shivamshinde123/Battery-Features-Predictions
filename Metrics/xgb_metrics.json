@@ -1,0 +1,8 @@
+{
+    "rmse_train": 0.02834195647214562,
+    "rmse_test": 0.03826679787125418,
+    "rmse_val": 0.03819271122374813,
+    "r2_adjusted_score_train": 0.9740464910003324,
+    "r2_adjusted_score_test": 0.9528490913112768,
+    "r2_adjusted_score_val": 0.9529475984195264
+}
