@@ -123,6 +123,10 @@ Battery-Feature-Project/
 6. **Continuous Integration:**  
    Each push or PR runs checks via `.github/workflows/ci.yml`.
 
+## Dataset
+
+[Data](https://www.kaggle.com/datasets/atechnohazard/battery-and-heating-data-in-real-driving-cycles/data)
+
 ## Testing
 
 Automated tests are in `src/tests/`.  
