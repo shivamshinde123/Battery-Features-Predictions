@@ -3,18 +3,6 @@
 
 A comprehensive machine learning pipeline for **predicting and analyzing battery state of charge (SoC)**. This project leverages modern ML and experiment tracking workflows to extract insights from raw battery data, build predictive models, and ensure robust, reproducible results.
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Folder Structure](#folder-structure)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Project Workflow](#project-workflow)
-- [Testing](#testing)
-- [Requirements](#requirements)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Overview
 
 This repository covers a full ML workflow:
