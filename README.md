@@ -26,6 +26,10 @@ This repository covers a full ML workflow:
 
 The project is modular, scalable, and ready for collaborative or production-level work.
 
+## Project Flow
+
+https://gitdiagram.com/shivamshinde123/Battery-Features-Predictions
+
 ## Folder Structure
 
 ```
