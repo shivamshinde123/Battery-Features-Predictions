@@ -3,6 +3,10 @@
 
 A comprehensive machine learning pipeline for **predicting and analyzing battery state of charge (SoC)**. This project leverages modern ML and experiment tracking workflows to extract insights from raw battery data, build predictive models, and ensure robust, reproducible results.
 
+## Detailed Documentation
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/shivamshinde123/Battery-Features-Predictions)
+
 ## Overview
 
 This repository covers a full ML workflow:
